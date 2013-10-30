@@ -1,4 +1,26 @@
 goflake
 =======
 
-A flake server written in Go, based on the implementation of SnowFlake with Tornado written by @jdmaturen (see https://github.com/formspring/flake)
+A flake server written in Go, based on the implementation of SnowFlake with Tornado written by [@jdmaturen](https://github.com/jdmaturen) (see https://github.com/formspring/flake)
+
+
+Wat
+===
+
+To start the server
+
+```> go run flake.go ```
+
+To get a uuid
+
+```> curl localhost:8080```
+
+To get stats about your server
+
+```> curl localhost:8080/stats```
+
+
+What's missing
+==============
+
+Configuration for port, and worker id are hard coded at the moment.
