@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"flag"
 	"fmt"
+	"log"
 	"net/http"
 	"sync"
 	"time"
@@ -15,6 +17,8 @@ const (
 
 var (
 	epoch               = uint64(time.Date(2013, 10, 20, 0, 0, 0, 0, time.UTC).UnixNano() / nano)
+	addr                = flag.String("addr", ":8080", "Address to listen to. Ex: ':8080'")
+	workerId            = flag.Uint64("wid", 0, "Worker Id. Has to be unique")
 	errClockBackwards   = errors.New("The clock went backwards!")
 	errSequenceOverflow = errors.New("Sequence Overflow!")
 )
@@ -99,10 +103,14 @@ func now() uint64 {
 	return uint64(time.Now().UnixNano() / nano)
 }
 
+func init() {
+	flag.Parse()
+}
+
 func main() {
-	var flake, err = NewFlake(0)
+	var flake, err = NewFlake(*workerId)
 	if err != nil {
-		fmt.Println("Could not instanciate new Flake generator", err.Error)
+		log.Println("Could not instanciate new Flake generator", err.Error)
 		return // exit
 	}
 
@@ -110,8 +118,8 @@ func main() {
 	http.HandleFunc("/stats", flake.getStats)
 
 	server := &http.Server{
-		Addr: ":8080",
+		Addr: *addr,
 	}
-	server.ListenAndServe()
-
+	log.Printf("flake: Go Flake listening on: %s", *addr)
+	log.Fatal(server.ListenAndServe())
 }
