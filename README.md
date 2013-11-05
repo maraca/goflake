@@ -23,5 +23,9 @@ To get stats about your server
 What's missing
 ==============
 
-* Configuration for port, and worker id are hard coded at the moment.
 * Tests
+
+Contributors
+============
+
+* [Tim Bart](https://github.com/pims)
